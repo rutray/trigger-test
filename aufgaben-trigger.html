@@ -7,6 +7,7 @@
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; line-height: 1.6; padding: 20px; color: #333; }
         .container { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+         .word-bank { margin-bottom: 20px; padding: 10px; border: 1px dashed #ccc; background: #fffbe6; position: sticky; top: 0; z-index: 10; }
         h1 { text-align: center; color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; }
         h2 { color: #2c3e50; margin-top: 30px; border-left: 5px solid #1a73e8; padding-left: 10px; }
         
@@ -30,20 +31,31 @@
 
 <div class="container">
     <h1>'MSSQL Trigger Master Of AP12' - Quiz </h1>
-
+    <div class="word-bank">
+        <strong>Verfügbare Wörter:</strong><br>
+        <span class="word-item">ROLLBACK</span> | 
+        <span class="word-item">DROP_TABLE</span> | 
+        <span class="word-item">EVENTDATA()</span> | 
+        <span class="word-item">AFTER</span> | 
+        <span class="word-item">DATABASE</span> | 
+        <span class="word-item">INSTEAD OF</span> | 
+        <span class="word-item">ALL SERVER</span> |
+        <span class="word-item">inserted</span> |
+        <span class="word-item">deleted</span>
+    </div>
     <h2>Teil 1: Code-Vervollständigung (DML & DDL)</h2>
 
     <div class="question-block">
         <p><strong>1. DML Trigger:</strong> Protokolliere Preisänderungen.</p>
         <div class="code-exercise">
             CREATE TRIGGER trg_PriceLog ON Products<br>
-            <input type="text" class="code-input" data-ans="AFTER"> UPDATE AS<br>
+            <input placeholder=". . ."  type="text" class="code-input" data-ans="AFTER"> UPDATE AS<br>
             BEGIN<br>
             &nbsp;&nbsp;SET NOCOUNT ON;<br>
             &nbsp;&nbsp;INSERT INTO History(OldPrice, NewPrice)<br>
             &nbsp;&nbsp;SELECT d.Price, i.Price<br>
-            &nbsp;&nbsp;FROM <input type="text" class="code-input" data-ans="deleted"> d<br>
-            &nbsp;&nbsp;JOIN <input type="text" class="code-input" data-ans="inserted"> i ON d.ID = i.ID;<br>
+            &nbsp;&nbsp;FROM <input placeholder=". . ." type="text" class="code-input" data-ans="deleted"> d<br>
+            &nbsp;&nbsp;JOIN <input placeholder=". . ." type="text" class="code-input" data-ans="inserted"> i ON d.ID = i.ID;<br>
             END;
         </div>
     </div>
@@ -52,10 +64,10 @@
         <p><strong>2. DML Trigger:</strong> Verhindere Löschen, setze Status auf 'Archiv'.</p>
         <div class="code-exercise">
             CREATE TRIGGER trg_SoftDelete ON Users<br>
-            <input type="text" class="code-input" data-ans="INSTEAD OF"> DELETE AS<br>
+            <input type="text" class="code-input" placeholder=". . ." data-ans="INSTEAD OF"> DELETE AS<br>
             BEGIN<br>
             &nbsp;&nbsp;UPDATE Users SET Status = 'Archiv'<br>
-            &nbsp;&nbsp;WHERE UserID IN (SELECT UserID FROM <input type="text" class="code-input" data-ans="deleted">);<br>
+            &nbsp;&nbsp;WHERE UserID IN (SELECT UserID FROM <input placeholder=". . ." type="text" class="code-input" data-ans="deleted">);<br>
             END;
         </div>
     </div>
@@ -63,11 +75,11 @@
     <div class="question-block">
         <p><strong>3. DDL Trigger:</strong> Verhindere das Löschen von Tabellen.</p>
         <div class="code-exercise">
-            CREATE TRIGGER trg_NoDrop ON <input type="text" class="code-input" data-ans="DATABASE"><br>
-            AFTER <input type="text" class="code-input" data-ans="DROP_TABLE"> AS<br>
+            CREATE TRIGGER trg_NoDrop ON <input placeholder=". . . " type="text" class="code-input" data-ans="DATABASE"><br>
+            AFTER <input placeholder=". . . " type="text" class="code-input" data-ans="DROP_TABLE"> AS<br>
             BEGIN<br>
             &nbsp;&nbsp;PRINT 'Nicht erlaubt!';<br>
-            &nbsp;&nbsp;<input type="text" class="code-input" data-ans="ROLLBACK">;<br>
+            &nbsp;&nbsp;<input placeholder=". . . " type="text" class="code-input" data-ans="ROLLBACK">;<br>
             END;
         </div>
     </div>
@@ -75,10 +87,10 @@
     <div class="question-block">
         <p><strong>4. DDL Trigger:</strong> Überwachung von neuen Datenbanken.</p>
         <div class="code-exercise">
-            CREATE TRIGGER trg_ServerAudit ON <input type="text" class="code-input" data-ans="ALL SERVER"><br>
+            CREATE TRIGGER trg_ServerAudit ON <input placeholder=". . . " type="text" class="code-input" data-ans="ALL SERVER"><br>
             AFTER CREATE_DATABASE AS<br>
             BEGIN<br>
-            &nbsp;&nbsp;DECLARE @data XML = <input type="text" class="code-input" data-ans="EVENTDATA()">;<br>
+            &nbsp;&nbsp;DECLARE @data XML = <input placeholder=". . . " type="text" class="code-input" data-ans="EVENTDATA()">;<br>
             &nbsp;&nbsp;-- Logik folgt...<br>
             END;
         </div>
@@ -123,7 +135,7 @@
     }
 
     function validateQuiz() {
-        let score = 21;
+        let score = 0;
         let total = 21;
 
         // Code Gaps
@@ -140,7 +152,10 @@
         mcData.forEach((d, i) => {
             const selected = document.querySelector(`input[name="q${i}"]:checked`);
             if (selected && selected.value === d.a) {
+                selected.style.outline = "2px solid #2ecc71";
                 score++;
+            } else if (selected && selected.value !== d.a) {
+                selected.style.outline = "2px solid #e74c3c";                
             }
         });
 
@@ -148,8 +163,11 @@
         resDiv.innerHTML = `Ergebnis: ${score} von ${total} richtig!`;
         if (score === total) {
             resDiv.className = "correct";
-            document.body.style.backgroundColor = "#d4edda"; // Ein helles Erfolg-Grün
-	   resDiv.innerHTML += '<br>🎉 Du bist ein Trigger-Experte! 🎉<br><br><img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTY3anhnejgyenFib2IxYnIxYXp3bW5nNHFpNTZ5YXdtdnA4eThoZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Hc8PMCBjo9BXa/giphy.gif" style="width:200px; border-radius:10px;">';
+            document.body.style.backgroundImage = 'url("https://cdn.innaturale.com/uploads/2018/02/krapfen-di-Carnevale.webp")';
+            document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundPosition = 'center'; // Ein helles Erfolg-Grün
+	   resDiv.innerHTML += '<br>🎉 Du bist ein Trigger-Experte! 🎉<br><br><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2s2eDc3MzM2Y3J6ZWk4emZydGhpaDJlenhsdGtyand2ODJ2azZubyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lFHtqqh6orvAhbiGmy/giphy.gif" style="width:200px; border-radius:10px;">';
         } else {
             resDiv.className = "wrong";
             document.body.style.backgroundColor = "#f0f2f5"; // Zurück zur Standardfarbe, falls Fehler da sind
