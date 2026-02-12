@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSSQL Trigger Übung</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        .code-box { background-color: #282c34; color: #abb2bf; padding: 20px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; font-size: 1.1em; line-height: 1.8; }
+        input { background: #3e4451; border: 1px solid #56b6c2; color: #e06c75; font-weight: bold; padding: 3-px 5px; border-radius: 3px; font-size: 1em; width: 140px; text-align: center; }
+        .btn { background-color: #56b6c2; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; font-size: 1em; }
+        .btn:hover { background-color: #48a3af; }
+        .result { margin-top: 20px; font-weight: bold; }
+        .word-bank { margin-bottom: 20px; padding: 10px; border: 1px dashed #ccc; background: #fffbe6; }
+        .word-item { display: inline-block; margin: 5px 10px; font-weight: bold; color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Übung: MSSQL INSTEAD OF Trigger</h2>
+    <p>Vervollständigen Sie den Code für einen "Soft-Delete" Trigger. Nutzen Sie die Begriffe aus der Liste unten.</p>
+    
+    <div class="word-bank">
+        <strong>Verfügbare Wörter:</strong><br>
+        <span class="word-item">CREATE TRIGGER</span> | 
+        <span class="word-item">INSTEAD OF</span> | 
+        <span class="word-item">UPDATE</span> | 
+        <span class="word-item">SET</span> | 
+        <span class="word-item">WHERE</span> | 
+        <span class="word-item">SELECT</span> | 
+        <span class="word-item">FROM</span> | 
+        <span class="word-item">END</span>
+    </div>
+
+    <div class="code-box">
+        <input type="text" id="gap1" placeholder="..."> trg_AnstattLoeschen<br>
+        ON Produkte<br>
+        <input type="text" id="gap2" placeholder="..."> DELETE<br>
+        AS<br>
+        BEGIN<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="gap3" placeholder="..."> Produkte<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="gap4" placeholder="..."> IstGeloescht = 1<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="gap5" placeholder="..."> ProduktID IN (<input type="text" id="gap6" placeholder="..."> ProduktID <input type="text" id="gap7" placeholder="..."> deleted);<br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;PRINT 'Deaktiviert statt gelöscht.';<br>
+        <input type="text" id="gap8" placeholder="...">;
+    </div>
+
+    <button class="btn" onclick="checkAnswer()">Ergebnis prüfen</button>
+    <div id="resultMessage" class="result"></div>
+</div>
+
+<script>
+    function checkAnswer() {
+        const answers = {
+            gap1: "CREATE TRIGGER",
+            gap2: "INSTEAD OF",
+            gap3: "UPDATE",
+            gap4: "SET",
+            gap5: "WHERE",
+            gap6: "SELECT",
+            gap7: "FROM",
+            gap8: "END"
+        };
+
+        let correctCount = 0;
+        for (let i = 1; i <= 8; i++) {
+            let input = document.getElementById('gap' + i);
+            if (input.value.trim().toUpperCase() === answers['gap' + i].toUpperCase()) {
+                input.style.borderColor = "#98c379";
+                input.style.color = "#98c379";
+                correctCount++;
+            } else {
+                input.style.borderColor = "#e06c75";
+                input.style.color = "#e06c75";
+            }
+        }
+
+        const msg = document.getElementById('resultMessage');
+        if (correctCount === 8) {
+            msg.innerHTML = "Perfekt! Alle Begriffe sind an der richtigen Stelle.";
+            msg.style.color = "#28a745";
+        } else {
+            msg.innerHTML = "Es sind noch Fehler vorhanden. Überprüfe die rot markierten Felder.";
+            msg.style.color = "#dc3545";
+        }
+    }
+</script>
+
+</body>
+</html>
